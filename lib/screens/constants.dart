@@ -15,3 +15,17 @@ ThemeData themeData = ThemeData(
     ),
   ),
 );
+
+String validate(String value) {
+  print(value);
+  if (value.isEmpty) return "This field is madatory";
+  return null;
+}
+
+String emailValidate(String value) {
+  bool emailValid = RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(value);
+  if (!emailValid) return "Please enter a valid Email";
+  return null;
+}

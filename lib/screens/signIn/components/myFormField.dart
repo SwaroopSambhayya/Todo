@@ -5,11 +5,17 @@ class MyFormField extends StatefulWidget {
   final String label;
   final bool secureText;
   final String placeholderText;
+  final Function validate;
+  final int maxLines;
+  final bool shouldFloat;
   MyFormField(
       {this.textController,
       this.label,
       this.secureText = false,
-      this.placeholderText});
+      this.placeholderText,
+      this.validate,
+      this.shouldFloat=false, 
+      this.maxLines});
 
   @override
   _MyFormFieldState createState() => _MyFormFieldState();
@@ -22,10 +28,14 @@ class _MyFormFieldState extends State<MyFormField> {
       margin: EdgeInsets.all(15),
       child: TextFormField(
         controller: widget.textController,
+        maxLines: widget.maxLines,
         style: Theme.of(context).textTheme.bodyText1,
         obscureText: widget.secureText,
         decoration: InputDecoration(
           labelText: widget.label,
+          floatingLabelBehavior: widget.shouldFloat
+              ? FloatingLabelBehavior.always
+              : FloatingLabelBehavior.auto,
           contentPadding: EdgeInsets.only(top: 25, bottom: 25, left: 20),
           labelStyle: Theme.of(context)
               .textTheme
@@ -46,6 +56,7 @@ class _MyFormFieldState extends State<MyFormField> {
             borderSide: BorderSide(color: Colors.white, width: 2),
           ),
         ),
+        validator: widget.validate,
       ),
     );
   }

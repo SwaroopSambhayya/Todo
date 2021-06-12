@@ -1,31 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/components/myFormField.dart';
-import 'package:todo/screens/signup/view.dart';
+import 'package:todo/screens/signup/model.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class SignIn extends StatefulWidget {
+class Signup extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _SignupState createState() => _SignupState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignupState extends State<Signup> {
   TextEditingController emailController;
   TextEditingController passwordController;
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController confirmPassController;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  SignupModel statusNotifier;
   @override
   void initState() {
     emailController = TextEditingController();
     passwordController = TextEditingController();
+    confirmPassController = TextEditingController();
+    statusNotifier = SignupModel();
     super.initState();
+  }
+
+  String verifyPassword(String value) {
+    if (value.isEmpty) return "Confirm passoword field is mandatory";
+    if (value != passwordController.text) return "Password does not match";
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
       body: SafeArea(
         child: Form(
-          key: formKey,
+          key: _formKey,
           child: SingleChildScrollView(
             child: Container(
               margin: EdgeInsets.all(10),
@@ -33,7 +47,7 @@ class _SignInState extends State<SignIn> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 50,
+                    height: 10,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
@@ -64,7 +78,7 @@ class _SignInState extends State<SignIn> {
                   ),
                   Center(
                     child: Text(
-                      "Login",
+                      "Signup",
                       style: Theme.of(context)
                           .textTheme
                           .headline3
@@ -75,31 +89,53 @@ class _SignInState extends State<SignIn> {
                     height: 50,
                   ),
                   MyFormField(
-                      textController: emailController,
-                      label: "Email",
-                      validate: emailValidate),
+                    textController: emailController,
+                    label: "Email",
+                    validate: emailValidate,
+                  ),
                   MyFormField(
                     textController: passwordController,
                     label: "Password",
                     secureText: true,
-                    maxLines: 1,
                     placeholderText: "",
                     validate: validate,
+                    maxLines: 1,
+                  ),
+                  MyFormField(
+                    textController: confirmPassController,
+                    label: "Confirm Password",
+                    secureText: true,
+                    placeholderText: "",
+                    validate: verifyPassword,
+                    maxLines: 1,
                   ),
                   SizedBox(
                     height: 30,
                   ),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (formKey.currentState.validate()) {}
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          await statusNotifier.addUserDetails(
+                              emailController.text, passwordController.text);
+                        }
                       },
-                      child: Text(
-                        "Login",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(fontWeight: FontWeight.w700),
+                      child: ValueListenableBuilder(
+                        valueListenable: statusNotifier,
+                        builder: (context, value, child) {
+                          return !value
+                              ? Text(
+                                  "Signup",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(fontWeight: FontWeight.w700),
+                                )
+                              : SpinKitFadingCircle(
+                                  color: Colors.white,
+                                  size: 30,
+                                );
+                        },
                       ),
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(
@@ -107,30 +143,6 @@ class _SignInState extends State<SignIn> {
                           primary: Theme.of(context).primaryColor),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      margin: EdgeInsets.all(20),
-                      child: TextButton(
-                        onPressed: () {
-                          print("hat");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Signup(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "New User? Signup",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: Theme.of(context).primaryColor),
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
