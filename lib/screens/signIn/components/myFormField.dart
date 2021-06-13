@@ -7,15 +7,19 @@ class MyFormField extends StatefulWidget {
   final String placeholderText;
   final Function validate;
   final int maxLines;
+  final IconData suffixIcon;
   final bool shouldFloat;
+  final Function suffixIconPressed;
   MyFormField(
       {this.textController,
       this.label,
       this.secureText = false,
       this.placeholderText,
       this.validate,
-      this.shouldFloat=false, 
-      this.maxLines});
+      this.shouldFloat = false,
+      this.maxLines,
+      this.suffixIcon,
+      this.suffixIconPressed});
 
   @override
   _MyFormFieldState createState() => _MyFormFieldState();
@@ -33,6 +37,12 @@ class _MyFormFieldState extends State<MyFormField> {
         obscureText: widget.secureText,
         decoration: InputDecoration(
           labelText: widget.label,
+          suffixIcon: IconButton(
+              color: Colors.grey[400],
+              icon: Icon(
+                widget.suffixIcon,
+              ),
+              onPressed: widget.suffixIconPressed),
           floatingLabelBehavior: widget.shouldFloat
               ? FloatingLabelBehavior.always
               : FloatingLabelBehavior.auto,

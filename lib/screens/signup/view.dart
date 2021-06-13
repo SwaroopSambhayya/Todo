@@ -1,8 +1,10 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/components/myFormField.dart';
 import 'package:todo/screens/signup/model.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:todo/screens/tasklist/view.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -100,6 +102,7 @@ class _SignupState extends State<Signup> {
                     placeholderText: "",
                     validate: validate,
                     maxLines: 1,
+                    suffixIcon: EvaIcons.eye,
                   ),
                   MyFormField(
                     textController: confirmPassController,
@@ -108,6 +111,7 @@ class _SignupState extends State<Signup> {
                     placeholderText: "",
                     validate: verifyPassword,
                     maxLines: 1,
+                    suffixIcon: EvaIcons.eye,
                   ),
                   SizedBox(
                     height: 30,
@@ -116,8 +120,29 @@ class _SignupState extends State<Signup> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
-                          await statusNotifier.addUserDetails(
+                          bool res = await statusNotifier.addUserDetails(
                               emailController.text, passwordController.text);
+                          if (res) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Signup Sucessfull"),
+                                backgroundColor: Theme.of(context).primaryColor,
+                              ),
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Tasks(),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Account already exists"),
+                                backgroundColor: Theme.of(context).accentColor,
+                              ),
+                            );
+                          }
                         }
                       },
                       child: ValueListenableBuilder(

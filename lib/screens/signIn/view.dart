@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/components/myFormField.dart';
+import 'package:todo/screens/signIn/model.dart';
 import 'package:todo/screens/signup/view.dart';
+import 'package:todo/screens/tasklist/view.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:todo/services/signInNotifier.dart';
 
 class SignIn extends StatefulWidget {
+  final SignInNotifier signInNotifier;
+  SignIn({this.signInNotifier});
   @override
   _SignInState createState() => _SignInState();
 }
@@ -12,10 +19,13 @@ class _SignInState extends State<SignIn> {
   TextEditingController emailController;
   TextEditingController passwordController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  SigninModel signInStatus;
+  bool showPass = false;
   @override
   void initState() {
     emailController = TextEditingController();
     passwordController = TextEditingController();
+    signInStatus = SigninModel();
     super.initState();
   }
 
@@ -81,25 +91,60 @@ class _SignInState extends State<SignIn> {
                   MyFormField(
                     textController: passwordController,
                     label: "Password",
-                    secureText: true,
+                    secureText: !showPass ? true : false,
                     maxLines: 1,
                     placeholderText: "",
                     validate: validate,
+                    suffixIcon: showPass ? EvaIcons.eyeOff : EvaIcons.eye,
+                    suffixIconPressed: () {
+                      setState(() {
+                        showPass = !showPass;
+                      });
+                    },
                   ),
                   SizedBox(
                     height: 30,
                   ),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (formKey.currentState.validate()) {}
+                      onPressed: () async {
+                        if (formKey.currentState.validate()) {
+                          bool result = await signInStatus.checkUserDetails(
+                              emailController.text, passwordController.text);
+                          if (result) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Signin successfull"),
+                                backgroundColor: Theme.of(context).primaryColor,
+                              ),
+                            );
+                            widget.signInNotifier.value = true;
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Incorrect email/password"),
+                                backgroundColor: Theme.of(context).primaryColor,
+                              ),
+                            );
+                          }
+                        }
                       },
-                      child: Text(
-                        "Login",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(fontWeight: FontWeight.w700),
+                      child: ValueListenableBuilder(
+                        valueListenable: signInStatus,
+                        builder: (context, isLoading, child) {
+                          return isLoading
+                              ? SpinKitFadingCircle(
+                                  size: 30,
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  "Login",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(fontWeight: FontWeight.w700),
+                                );
+                        },
                       ),
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(
@@ -113,7 +158,6 @@ class _SignInState extends State<SignIn> {
                       margin: EdgeInsets.all(20),
                       child: TextButton(
                         onPressed: () {
-                          print("hat");
                           Navigator.push(
                             context,
                             MaterialPageRoute(
