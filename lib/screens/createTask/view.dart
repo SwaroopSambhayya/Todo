@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/components/myFormField.dart';
+import 'package:todo/screens/tasklist/model.dart';
+import 'package:intl/intl.dart';
 
 class CreateTask extends StatefulWidget {
   @override
@@ -16,6 +19,12 @@ class _CreateTaskState extends State<CreateTask> {
     titleController = TextEditingController();
     descriptionController = TextEditingController();
     super.initState();
+  }
+
+  getDate() {
+    DateTime date = DateTime.now();
+    DateFormat formatter = DateFormat("dd MMM");
+    return formatter.format(date).toString();
   }
 
   @override
@@ -63,8 +72,23 @@ class _CreateTaskState extends State<CreateTask> {
                   height: 40,
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {}
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      String time = getDate();
+
+                      bool result = await Provider.of<TaskProvider>(context,
+                              listen: false)
+                          .addTask(titleController.text,
+                              descriptionController.text, time);
+                      if (result) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Task successfully added"),
+                          ),
+                        );
+                        Navigator.pop(context);
+                      }
+                    }
                   },
                   child: Text(
                     "Add",

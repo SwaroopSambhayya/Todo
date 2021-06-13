@@ -20,6 +20,7 @@ class SigninModel extends ValueNotifier<bool> {
             userList[i]["password"] == password) {
           result = true;
           await pref.setString("signedIn", email);
+
           break;
         }
       }

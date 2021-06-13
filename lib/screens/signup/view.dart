@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/components/myFormField.dart';
 import 'package:todo/screens/signup/model.dart';
@@ -125,16 +126,12 @@ class _SignupState extends State<Signup> {
                           if (res) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("Signup Sucessfull"),
+                                content: Text(
+                                    "Signup Sucessfull, please login with signup credentials"),
                                 backgroundColor: Theme.of(context).primaryColor,
                               ),
                             );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Tasks(),
-                              ),
-                            );
+                            Navigator.pop(context);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

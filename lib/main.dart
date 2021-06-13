@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/view.dart';
 import 'package:todo/screens/tasklist/view.dart';
 import 'package:todo/services/signInNotifier.dart';
+import 'package:todo/screens/tasklist/model.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (_) => TaskProvider(), child: MyApp()),
+  );
 }
 
 class MyApp extends StatefulWidget {
