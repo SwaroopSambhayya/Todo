@@ -4,7 +4,7 @@ import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/components/myFormField.dart';
 import 'package:todo/screens/signIn/model.dart';
 import 'package:todo/screens/signup/view.dart';
-import 'package:todo/screens/tasklist/view.dart';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:todo/services/signInNotifier.dart';
 
@@ -147,6 +147,9 @@ class _SignInState extends State<SignIn> {
                         },
                       ),
                       style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                           minimumSize: Size(
                               MediaQuery.of(context).size.width * 0.85, 60),
                           primary: Theme.of(context).primaryColor),

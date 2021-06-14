@@ -1,11 +1,9 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/components/myFormField.dart';
 import 'package:todo/screens/signup/model.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:todo/screens/tasklist/view.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -172,6 +170,8 @@ class _SignupState extends State<Signup> {
                         },
                       ),
                       style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
                           minimumSize: Size(
                               MediaQuery.of(context).size.width * 0.85, 60),
                           primary: Theme.of(context).primaryColor),
