@@ -18,6 +18,8 @@ class _SignupState extends State<Signup> {
   TextEditingController confirmPassController;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   SignupModel statusNotifier;
+  bool showPass = false;
+  bool showCpass = false;
   @override
   void initState() {
     emailController = TextEditingController();
@@ -99,20 +101,30 @@ class _SignupState extends State<Signup> {
                   MyFormField(
                     textController: passwordController,
                     label: "Password",
-                    secureText: true,
+                    secureText: showPass ? false : true,
                     placeholderText: "",
                     validate: validate,
                     maxLines: 1,
-                    suffixIcon: EvaIcons.eye,
+                    suffixIcon: showPass ? EvaIcons.eyeOff : EvaIcons.eye,
+                    suffixIconPressed: () {
+                      setState(() {
+                        showPass = !showPass;
+                      });
+                    },
                   ),
                   MyFormField(
                     textController: confirmPassController,
                     label: "Confirm Password",
-                    secureText: true,
+                    secureText: showCpass ? false : true,
                     placeholderText: "",
                     validate: verifyPassword,
                     maxLines: 1,
-                    suffixIcon: EvaIcons.eye,
+                    suffixIcon: showCpass ? EvaIcons.eyeOff : EvaIcons.eye,
+                    suffixIconPressed: () {
+                      setState(() {
+                        showCpass = !showCpass;
+                      });
+                    },
                   ),
                   SizedBox(
                     height: 30,

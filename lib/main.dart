@@ -1,16 +1,40 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/model/taskModel.dart';
 import 'package:todo/screens/constants.dart';
 import 'package:todo/screens/signIn/view.dart';
 import 'package:todo/screens/tasklist/view.dart';
 import 'package:todo/services/signInNotifier.dart';
 import 'package:todo/screens/tasklist/model.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  List<TaskModel> taskList = await getTasks();
+
   runApp(
-    ChangeNotifierProvider(create: (_) => TaskProvider(), child: MyApp()),
+    ChangeNotifierProvider(
+        create: (_) => TaskProvider(taskLists: taskList), child: MyApp()),
   );
+}
+
+Future<List<TaskModel>> getTasks() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  List<TaskModel> taskList = [];
+
+  List taskData = jsonDecode(
+    pref.getString("userTasks"),
+  );
+  if (taskData == null) {
+    return [];
+  } else {
+    for (var i in taskData) {
+      taskList.add(TaskModel.fromJson(i));
+    }
+  }
+  return taskList;
 }
 
 class MyApp extends StatefulWidget {

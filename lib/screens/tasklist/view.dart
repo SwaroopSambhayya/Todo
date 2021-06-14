@@ -30,6 +30,30 @@ class _TasksState extends State<Tasks> {
     await Provider.of<TaskProvider>(context, listen: false).getTasks();
   }
 
+  showDelete(int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return InkWell(
+          onTap: () async {
+            await Provider.of<TaskProvider>(context, listen: false)
+                .deleteTask(index);
+            Navigator.pop(context);
+          },
+          child: Ink(
+            height: 60,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.red,
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,10 +139,15 @@ class _TasksState extends State<Tasks> {
                         crossAxisCount: 4,
                         itemCount: tasks.length,
                         itemBuilder: (context, index) {
-                          return TaskCard(
-                            title: tasks[index].title,
-                            time: tasks[index].time,
-                            description: tasks[index].description,
+                          return GestureDetector(
+                            onLongPress: () {
+                              showDelete(index);
+                            },
+                            child: TaskCard(
+                              title: tasks[index].title,
+                              time: tasks[index].time,
+                              description: tasks[index].description,
+                            ),
                           );
                         },
                         staggeredTileBuilder: (int index) =>

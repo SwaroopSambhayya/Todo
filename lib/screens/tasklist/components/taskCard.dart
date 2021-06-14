@@ -4,6 +4,7 @@ class TaskCard extends StatelessWidget {
   final String title;
   final String description;
   final String time;
+
   TaskCard({this.title, this.description, this.time});
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class TaskCard extends StatelessWidget {
           Text(
             description,
             overflow: TextOverflow.ellipsis,
-            maxLines: 4,
+            maxLines: 6,
             style: Theme.of(context)
                 .textTheme
                 .bodyText1

@@ -5,9 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo/model/taskModel.dart';
 
 class TaskProvider extends ChangeNotifier {
-  List<TaskModel> taskLists = [];
+  TaskProvider({this.taskLists});
+  List<TaskModel> taskLists;
   TaskModel userTasks;
   bool isLoading = true;
+
   Future getTasks() async {
     isLoading = true;
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -69,9 +71,18 @@ class TaskProvider extends ChangeNotifier {
         }
       }
     }
-    pref.setString(
+    await pref.setString(
       "userTasks",
       jsonEncode(taskLists),
     );
+  }
+
+  Future<bool> deleteTask(index) async {
+    isLoading = true;
+    userTasks.tasks.removeAt(index);
+    await updateTaskList(false);
+    isLoading = false;
+    notifyListeners();
+    return true;
   }
 }
