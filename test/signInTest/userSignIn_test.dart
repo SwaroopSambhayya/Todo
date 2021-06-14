@@ -3,7 +3,7 @@ import 'package:todo/screens/signIn/model.dart';
 
 void main() {
   test(
-      "Give the user when he tries to signIn then checkCredentials and display false if incorrect",
+      "Give the user when tries to signIn then checkCredentials and display false if incorrect",
       () async {
     //arrange
     SigninModel model = SigninModel();

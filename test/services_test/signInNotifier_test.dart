@@ -4,7 +4,7 @@ import 'package:todo/services/signInNotifier.dart';
 
 void main() {
   test(
-      'Given the user when he starts app then checkwhether he is signedIn and mark as signedIn ',
+      'Given the user when starts app then checkwhether he is signedIn and mark as signedIn ',
       () async {
     //ARRANGE
     final signInNotifier = SignInNotifier();

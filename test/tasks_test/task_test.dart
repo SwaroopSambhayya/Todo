@@ -5,7 +5,7 @@ import 'package:todo/screens/tasklist/model.dart';
 
 void main() {
   test(
-      "Given user when he enters title and description and submits task then create a task",
+      "Given user when enters title and description and submits task then create a task",
       () async {
     //arrange
     SharedPreferences pref = await SharedPreferences.getInstance();
